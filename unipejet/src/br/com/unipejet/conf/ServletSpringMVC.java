@@ -5,13 +5,27 @@ import javax.servlet.ServletRegistration.Dynamic;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import br.com.unipejet.viewresolver.Agendamento;
+import br.com.unipejet.viewresolver.MyJob;
+
+import javax.servlet.Filter;
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration.Dynamic;
+
+import org.springframework.core.env.AbstractEnvironment;
+import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
+import org.springframework.web.context.request.RequestContextListener;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
 public class ServletSpringMVC extends AbstractAnnotationConfigDispatcherServletInitializer {
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
 		// TODO Auto-generated method stub
 		return new Class[]{SecurityConfiguration.class,
-				AppWebConfiguration.class,JPAConfiguration.class};
+				AppWebConfiguration.class,JPAConfiguration.class, Agendamento.class, MyJob.class};
 	}
 
 	@Override
@@ -33,5 +47,11 @@ public class ServletSpringMVC extends AbstractAnnotationConfigDispatcherServletI
 	new MultipartConfigElement(""));
 	}
 	
+	
+	@Override
+	protected Filter[] getServletFilters() {
+	return new Filter[]{
+	new OpenEntityManagerInViewFilter()};
+	}
 	
 }

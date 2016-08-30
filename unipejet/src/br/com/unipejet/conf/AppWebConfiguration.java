@@ -7,9 +7,11 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.guava.GuavaCacheManager;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.format.datetime.DateFormatterRegistrar;
@@ -22,20 +24,20 @@ import org.springframework.web.multipart.support.StandardServletMultipartResolve
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import com.google.common.cache.CacheBuilder;
 
 import br.com.unipejet.controllers.UsuarioController;
-import br.com.unipejet.daos.ProdutoDAO;
 import br.com.unipejet.daos.UserDAO;
 import br.com.unipejet.infra.FileSaver;
 import br.com.unipejet.models.Role;
-import br.com.unipejet.models.ShoppingCart;
 import br.com.unipejet.viewresolver.JsonViewResolver;
+
+
 
 @EnableWebMvc
 @ComponentScan(basePackageClasses={UsuarioController.class,UserDAO.class,FileSaver.class, Role.class,JsonViewResolver.class})
@@ -123,6 +125,15 @@ public class AppWebConfiguration extends WebMvcConfigurerAdapter {
 	return resolver;
 	}
 	
+	/*
+	@Bean
+	public static void main(String[] args) {
+
+		ApplicationContext context = 
+               new ClassPathXmlApplicationContext
+              ("applicationContext.xml");
+	}
+	*/
 	@Override
 	public void configureDefaultServletHandling(
 	DefaultServletHandlerConfigurer configurer) {

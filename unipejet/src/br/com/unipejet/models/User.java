@@ -35,7 +35,7 @@ public class User implements UserDetails{
 
 	
 
-	private Long cartao_milha;
+
 	
     @Id
    // @Pattern(regexp = "^[\\w\\-]+(\\.[\\w\\-]+)*@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}$")
@@ -60,6 +60,23 @@ public class User implements UserDetails{
 	@NotBlank
     private String senha_testa;
     
+	// Esse atributo representa os pontos em milhas que o usuário possui, ao efetuar uma compra o valor da kilometragem é 
+	//subtraida desse valor.
+	private double cartao_credito;
+	
+	
+	//Esse atributo é apenas um numero de indentificação do cartão de milha que é gerado automaticamente pelo sistema, não
+	//confundir com o atributo acima que se trata do valor em pontos de milha que o usuário possui.
+	private Long cartao_milha;
+	
+	public double getCartao_credito() {
+		return cartao_credito;
+	}
+
+	public void setCartao_credito(double cartao_credito) {
+		this.cartao_credito = cartao_credito;
+	}
+
 	public String getSenha_testa() {
 		return senha_testa;
 	}

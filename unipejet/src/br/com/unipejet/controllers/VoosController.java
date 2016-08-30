@@ -1,7 +1,10 @@
 package br.com.unipejet.controllers;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,14 +23,16 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.unipejet.daos.VoosDAO;
-import br.com.unipejet.models.Produto;
+
 import br.com.unipejet.models.User;
 import br.com.unipejet.models.Voos;
+import br.com.unipejet.view.Data;
 
 @Transactional
 @Controller
-public class VoosController {
+public class VoosController implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	@Autowired
 	private VoosDAO voosDAO;
 	
@@ -52,7 +57,7 @@ public class VoosController {
 		  
 		// Ajustes, antes de gravar no banco
 		    voo.setAssentos(voo.getCapacidade());
-		  
+		    voo.setStatus(0);
 		    
 		        String  valor = voo.getData();
 		        String data = valor.replaceAll("-", "/");
@@ -62,12 +67,12 @@ public class VoosController {
 		        System.out.println(novaData);
 		    
 		    
-		    
+		    System.out.print("Concluido");
 		    voosDAO.save(voo);
        
 		    redirectAttributes.addFlashAttribute("sucesso", "Voo cadastrado com sucesso");
 	              
-	        return new ModelAndView("redirect:/voos/cad_voos");
+	        return new ModelAndView("redirect:/voos/listar_voos");
 		
 	
 	}
@@ -118,6 +123,14 @@ public class VoosController {
  		}
  		
       
+ 		    String  valor = voo.getData();
+	        String data = valor.replaceAll("-", "/");
+	        String[] s = data.split("/");
+	        String novaData = s[2]+"/"+s[1]+"/"+s[0];
+	        voo.setData(novaData);
+	        System.out.println(novaData);
+ 		    
+ 		
  		    voosDAO.altera(voo);
         
  		    redirectAttributes.addFlashAttribute("sucesso", "Voo editado com sucesso");
@@ -130,10 +143,11 @@ public class VoosController {
 	
 	// Remove voo cadastrado
  	@RequestMapping("voos/remove_voo")
- 	public String remove_voo(Integer identificador) {
+ 	public String remove_voo(Integer identificador, RedirectAttributes redi) {
  	
      Voos voo = voosDAO.find(identificador);
      voosDAO.remove(voo);
+     redi.addFlashAttribute("msg", "Voo removido com sucesso");
      return "redirect:/voos/listar_voos";
  	}
  	
@@ -150,6 +164,19 @@ public class VoosController {
     ModelAndView modelAndView =
 	   new ModelAndView("voos/pesquisa_voo");
     
+    String data_atual;
+     if(data == null || data ==""){
+       Data data_1 = new Data();
+       data_atual   = data_1.converteData();
+     }
+     else 
+    	 data_atual = data;
+       
+       
+       System.out.println(data_atual);
+       
+	    modelAndView.addObject("data", data_atual);
+    
         if(origem == "") origem = null;
     
         if(data != null && origem != null && destino != null){
@@ -159,6 +186,9 @@ public class VoosController {
             String datas = valor.replaceAll("-", "/");
             String[] s = datas.split("/");
             String nova_data = s[2]+"/"+s[1]+"/"+s[0];	
+            
+            
+            
             List<Voos> voos = voosDAO.buscaVoo(origem, destino, nova_data);
 	        System.out.println(nova_data);
 	        modelAndView.addObject("voos", voos);

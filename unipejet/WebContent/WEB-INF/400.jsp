@@ -8,5 +8,6 @@
 </head>
 <body>
 Você tentou acessar um recurso não permitido do nosso site
+   <c:redirect url="/login?logout"/> 
 </body>
 </html>

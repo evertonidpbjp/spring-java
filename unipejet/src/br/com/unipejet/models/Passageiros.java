@@ -4,10 +4,9 @@ package br.com.unipejet.models;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-@Embeddable
 public class Passageiros {
   
-		@Column(scale=2)
+		
 		private String nome;
 		private String cpf;
 		public String getNome() {

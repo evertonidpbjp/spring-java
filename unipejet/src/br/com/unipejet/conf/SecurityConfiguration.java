@@ -1,16 +1,17 @@
 package br.com.unipejet.conf;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
 
 
 @EnableWebMvcSecurity
@@ -29,21 +30,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 	http.authorizeRequests()
-	.antMatchers("/produtos/form").hasRole("ADMIN")
-	.antMatchers("/shopping/**").permitAll()
+	.antMatchers("/listar").hasRole("ADMIN")
+	.antMatchers("/remove_usuario").hasRole("ADMIN")
 	.antMatchers(HttpMethod.POST,"/produtos").hasRole("ADMIN")
-	.antMatchers("/produtos/**").permitAll()
+	.antMatchers("/novo_usuario").hasRole("ADMIN")
+	.antMatchers("/voos/cad_voos").hasRole("ADMIN")
+	.antMatchers("/voos/listar_voos").hasRole("ADMIN")
+	.antMatchers("/voos/edita_voo").hasRole("ADMIN")
+	.antMatchers("voos/remove_voo").hasRole("ADMIN")
 	.antMatchers("/cadastro/**").permitAll()
-	.antMatchers("/cadastrar").permitAll()
-	.antMatchers("/listar").permitAll()
+	.antMatchers("/salva_usuario_cadastro").permitAll()
 	.antMatchers("/editar").permitAll()
 	.anyRequest().authenticated()
 	.and().formLogin().loginPage("/login").permitAll()  
 	.and()
-    .logout().logoutRequestMatcher(new AntPathRequestMatcher(
+	.logout()
+    .addLogoutHandler(customLogoutHandler()) 
+    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+	/*
+	
+	.logout().logoutRequestMatcher(new AntPathRequestMatcher(
 	"/logout"));
 	
-	
+	*/
 	}
 	
 	
@@ -52,6 +61,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/resources/**");
     }
 	
+	@Bean
+	public CustomLogoutHandler customLogoutHandler() {
+	    return new CustomLogoutHandler();
+	}
 	
 	}
 	

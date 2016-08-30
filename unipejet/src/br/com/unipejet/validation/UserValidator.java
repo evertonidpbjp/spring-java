@@ -4,7 +4,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import br.com.unipejet.models.Produto;
+
 import br.com.unipejet.models.User;
 
 

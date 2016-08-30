@@ -12,8 +12,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 
-import br.com.unipejet.models.BookType;
-import br.com.unipejet.models.Produto;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
+
 import br.com.unipejet.models.Role;
 import br.com.unipejet.models.User;
 import br.com.unipejet.models.Voos;
@@ -42,9 +43,10 @@ return users.get(0);
 
 
 // Método responsável por gravar os dados, cadastrando novos usuários
-public void save(User user){
+public void save(User user) throws MySQLIntegrityConstraintViolationException{
 
-em.persist(user);
+	em.persist(user);
+
 
 }
 
@@ -70,8 +72,14 @@ public void remove(User user) {
 	
 }
 
+public long contaRegistros(){
+String consulta = "SELECT COUNT(u) FROM User u";
+TypedQuery<Long> query = em.createQuery(consulta, Long.class);
+Long resultado = query.getSingleResult();
 
+return resultado;
 
+}
 }
 
 

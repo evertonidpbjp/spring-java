@@ -1,6 +1,6 @@
 package br.com.unipejet.models;
 
-import java.math.BigDecimal;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,22 +8,62 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-
 public class Compras {
 
 	
-	Integer identificador;
-    Integer numero_compra;
+	private Integer identificador;
+    private Integer numero_compra;
+	private Integer restantes;
+    
 	
+	
+    public Integer getRestantes() {
+		return restantes;
+	}
+
+
+
+	public void setRestantes(Integer restantes) {
+		this.restantes = restantes;
+	}
+
+	//Número de passagens compradas
+    private Integer passagens;
+	
+    //Total em reais (considera o preço do número de passagens vezes o preço)
+    private double total;
+   
+    //Total em milhas (considera o número de passagens vezes a distancia.
+	private double total_milhas;
+	
+	//Lista dos passageiros para essa compra específica
+	private List<Passageiros> passageiros = new ArrayList<Passageiros>();
+    
+    
+
+	public double getTotal_milhas() {
+		return total_milhas;
+	}
+
+
+
+
+
+	public void setTotal_milhas(double total_milhas) {
+		this.total_milhas = total_milhas;
+	}
+
+
+
+
 
 	public Integer getNumero_compra() {
 		return numero_compra;
 	}
 
-	private Integer passagens;
-	private double total;
+	
     
-	private List<Passageiros> passageiros = new ArrayList<Passageiros>();
+	
 
 	public Integer getIdentificador() {
 		return identificador;

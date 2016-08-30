@@ -1,34 +1,37 @@
 package br.com.unipejet.daos;
 
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 
-import br.com.unipejet.models.BookType;
-import br.com.unipejet.models.Produto;
+import br.com.unipejet.infra.NegocioException;
+
 import br.com.unipejet.models.User;
 import br.com.unipejet.models.Voos;
 
 
 
 @Repository
-public class VoosDAO {
+public class VoosDAO implements Serializable{
 
-	
+//	@PersistenceContext(name="PersistentUnitName", type=PersistenceContextType.EXTENDED)
 	@PersistenceContext
 	private EntityManager voo_manager;
-
+	private static final long serialVersionUID = 1L;
 
 
 
@@ -46,6 +49,8 @@ public class VoosDAO {
 	}
 
 	
+	
+	
 	//Método para buscar um voo específico
 	public Voos find(Integer identificador) {
 	return voo_manager.find(Voos.class, identificador);
@@ -53,8 +58,17 @@ public class VoosDAO {
 
 
 	// Método para editar voo
-	public void altera(Voos voo) {
-	voo_manager.merge(voo);
+	@Transactional 
+	public Voos altera(Voos voo) {
+	
+		
+		try {
+		voo = this.voo_manager.merge(voo);
+			return voo;
+		} catch (OptimisticLockException e) {
+			throw new NegocioException("Erro de concorrência. Esse usuário já foi alterado anteriormente.");
+		}
+	
 	}
 
 	// Método que remove um voo
@@ -93,7 +107,14 @@ public class VoosDAO {
        
 	}
 		
-		
+	public long contaRegistros(){
+		String consulta = "SELECT COUNT(v) FROM Voos v";
+		TypedQuery<Long> query = voo_manager.createQuery(consulta, Long.class);
+		Long resultado = query.getSingleResult();
+
+		return resultado;
+
+		}
 		
 	}
 		

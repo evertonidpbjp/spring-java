@@ -16,7 +16,9 @@
  <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"> </script> 
 
 <style>  label.error{color: red; padding: 2px}</style>
-  
+<style>
+
+</style>
   
   </head>
   <body>
@@ -26,7 +28,7 @@
 
         
         
-<form:form servletRelativeAction="/cadastrar" method="post"  commandName="user" id="formulario">
+<form:form servletRelativeAction="/salva_usuario_cadastro" method="post"  commandName="user" id="formulario">
 		<span style="color: blue; margin: 10px;"]> ${sucesso } </span>
     
     	<div>
@@ -72,19 +74,25 @@
 	</div>
  
 
-
 <sec:authorize access="hasRole('ROLE_ADMIN')">
   <div align="center">
- <label for="roles[0].name"> Nível de Permissão</label>  <br>
  <select name="roles[0].name"  style="width: 260px; height: 25px" id="roles">
   <option value="ROLE_CLIENTE" selected> CLIENTE (conta limitada)</option>
   <option value="ROLE_ADMIN"> ADMINISTRADOR</option>
  </select>	
-  <input type="hidden" name="role"  id="role" />
+  <input type="hidden" name="role"  id="role" value="ROLE_CLIENTE"/>
   </div>
 </sec:authorize>
+
  
  <sec:authorize access="isAnonymous()">  
+
+  <input  type="hidden" name="role" value="ROLE_CLIENTE"/>
+  <input  type="hidden" name="roles[0].name" value="ROLE_CLIENTE"/>
+
+</sec:authorize>
+   
+    <sec:authorize access="hasRole('ROLE_CLIENTE')">  
 
   <input  type="hidden" name="role" value="ROLE_CLIENTE"/>
   <input  type="hidden" name="roles[0].name" value="ROLE_CLIENTE"/>
@@ -95,11 +103,11 @@
    
 			<label for="cartao_milha"></label>
 			<input type="hidden" name="cartao_milha"/>		
-		
+		    <input type="hidden" name="cartao_credito" value="10000"/>
 		   
 			
 				
-		<input name="idade" type="hidden" id="idade">
+		<form:input path="idade" name="idade" type="text" id="idade" style="display: none"/>
         <form:errors path="idade" style="color: red"/>
 <div>
 <input type="submit" value="Enviar">
@@ -113,7 +121,8 @@
         
       </div>
     </div>
-  <script type="text/javascript" src="<c:url value='/resources/js/arquivo.js'/>"> </script>
+<script type="text/javascript" src="<c:url value='/resources/js/arquivo.js'/>"> </script> 
+ 
  
 </body>
 </html>
